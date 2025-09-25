@@ -151,20 +151,19 @@
     setInterval(createSnow, 200);
 
     // Load APK links from links.txt
-fetch('assets/apk/links.txt')
-  .then(response => response.text())
-  .then(data => {
-    const lines = data.split('\n');
-    const links = {};
-    lines.forEach(line => {
-      const [key, value] = line.split('=');
-      if (key && value) links[key.trim()] = value.trim();
-    });
+// Load YouTube link
+fetch('assets/apk/yt.txt')
+  .then(res => res.text())
+  .then(link => {
+    document.querySelector('.btn.youtube').href = link.trim();
+  });
 
-    if (links['yt']) document.querySelector('.btn.youtube').href = encodeURI(links['yt']);
-    if (links['ytm']) document.querySelector('.btn.music').href = encodeURI(links['ytm']);
-  })
-  .catch(err => console.error('Error loading APK links:', err));
+// Load Music link
+fetch('assets/apk/ytm.txt')
+  .then(res => res.text())
+  .then(link => {
+    document.querySelector('.btn.music').href = link.trim();
+  });
  </script>
 </body>
 </html>
