@@ -161,12 +161,11 @@ fetch('assets/apk/links.txt')
       if (key && value) links[key.trim()] = value.trim();
     });
 
-    // Use absolute URLs
-    if (links['yt']) document.querySelector('.btn.youtube').href = links['yt'].startsWith('http') ? links['yt'] : 'https://' + links['yt'];
-    if (links['ytm']) document.querySelector('.btn.music').href = links['ytm'].startsWith('http') ? links['ytm'] : 'https://' + links['ytm'];
+    if (links['yt']) document.querySelector('.btn.youtube').href = encodeURI(links['yt']);
+    if (links['ytm']) document.querySelector('.btn.music').href = encodeURI(links['ytm']);
   })
   .catch(err => console.error('Error loading APK links:', err));
-  </script>
+ </script>
 </body>
 </html>
 
