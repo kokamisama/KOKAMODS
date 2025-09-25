@@ -151,19 +151,21 @@
     setInterval(createSnow, 200);
 
     // Load APK links from links.txt
-    fetch('assets/apk/links.txt')
-      .then(response => response.text())
-      .then(data => {
-        const lines = data.split('\n');
-        const links = {};
-        lines.forEach(line => {
-          const [key, value] = line.split('=');
-          if(key && value) links[key.trim()] = value.trim();
-        });
-        document.querySelector('.btn.youtube').href = links['yt'] || '#';
-        document.querySelector('.btn.music').href = links['ytm'] || '#';
-      })
-      .catch(err => console.error('Error loading APK links:', err));
+fetch('assets/apk/links.txt')
+  .then(response => response.text())
+  .then(data => {
+    const lines = data.split('\n');
+    const links = {};
+    lines.forEach(line => {
+      const [key, value] = line.split('=');
+      if (key && value) links[key.trim()] = value.trim();
+    });
+
+    // Use absolute URLs
+    if (links['yt']) document.querySelector('.btn.youtube').href = links['yt'].startsWith('http') ? links['yt'] : 'https://' + links['yt'];
+    if (links['ytm']) document.querySelector('.btn.music').href = links['ytm'].startsWith('http') ? links['ytm'] : 'https://' + links['ytm'];
+  })
+  .catch(err => console.error('Error loading APK links:', err));
   </script>
 </body>
 </html>
