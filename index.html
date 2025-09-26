@@ -1,170 +1,234 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>KOKAMODS</title>
   <style>
-    @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;700&display=swap');
+    /* Reset */
+    * { margin: 0; padding: 0; box-sizing: border-box; }
 
     body {
-      margin: 0;
-      font-family: 'Noto Sans JP', sans-serif;
-      background: linear-gradient(135deg, #0f0f1a, #1a1a2e);
-      color: #fff;
-      overflow: hidden;
+      background: #121212;
+      color: white;
+      font-family: "Roboto", sans-serif;
       height: 100vh;
       display: flex;
+      justify-content: center;
+      align-items: center;
       flex-direction: column;
-      justify-content: center;
-      align-items: center;
-      position: relative;
-    }
-
-    header a img {
-      max-width: 60%;
-      aspect-ratio: 16/9;
-      height: auto;
-      border-radius: 12px;
-      display: block;
-      margin: 0 auto;
-    }
-
-    .buttons {
-      display: flex;
-      gap: 20px;
-      margin-top: 30px;
-      z-index: 2;
-    }
-
-    .btn {
-      flex: 1 1 0;
-      padding: 20px;
-      border: none;
-      border-radius: 16px;
-      font-size: 1.2rem;
-      font-weight: bold;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      gap: 10px;
-      cursor: pointer;
-      color: white;
-      text-decoration: none;
-      background: linear-gradient(135deg, #ff4b4b, #ff7676);
-      box-shadow: 0 8px 20px rgba(255, 75, 75, 0.4);
-      transition: transform 0.2s ease, box-shadow 0.2s ease;
-      position: relative;
       overflow: hidden;
-      min-width: 180px;
     }
 
-    .btn.music {
-      background: linear-gradient(135deg, #8e2de2, #4a00e0);
-      box-shadow: 0 8px 20px rgba(142, 45, 226, 0.4);
-    }
-
-    .btn:hover {
-      transform: scale(1.08);
-      box-shadow: 0 10px 25px rgba(255, 255, 255, 0.3);
-    }
-
-    .btn img {
-      width: 28px;
-      height: 28px;
-    }
-
-    .btn:active::after {
-      content: "";
-      position: absolute;
-      left: 50%;
-      top: 50%;
-      width: 300%;
-      height: 300%;
-      background: rgba(255,255,255,0.3);
-      transform: translate(-50%, -50%) scale(0);
-      border-radius: 50%;
-      animation: ripple 0.6s linear;
+    /* Particle canvas */
+    #particles {
+      position: fixed;
+      top: 0; left: 0;
+      width: 100%; height: 100%;
       z-index: 0;
     }
 
-    @keyframes ripple {
-      to { transform: translate(-50%, -50%) scale(1); opacity: 0; }
+    /* Logo */
+    .logo {
+      width: 60%;
+      max-width: 400px;
+      margin-bottom: 20px;
+      cursor: pointer;
+      z-index: 2;
+      transition: transform 0.3s ease, filter 0.3s ease;
+      filter: drop-shadow(0 0 20px rgba(255,255,255,0.4));
+    }
+    .logo:hover { 
+      transform: scale(1.08);
+      filter: drop-shadow(0 0 30px rgba(255,255,255,0.7));
     }
 
-    .snow {
-      position: absolute;
-      width: 4px;
-      height: 4px;
-      background: white;
-      border-radius: 50%;
-      opacity: 0.8;
-      animation: snowFall linear infinite;
+    /* Buttons */
+    .btn-container {
+      display: flex;
+      gap: 20px;
+      z-index: 2;
+    }
+    .btn {
+      flex: 1;
+      min-width: 140px;
+      text-decoration: none;
+      color: white;
+      font-size: 1.2rem;
+      font-weight: bold;
+      padding: 15px 25px;
+      border-radius: 12px;
+      background: #1f1f1f;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: transform 0.2s, background 0.3s, box-shadow 0.3s;
+      box-shadow: 0 4px 15px rgba(0,0,0,0.5);
+    }
+    .btn:hover {
+      background: #333;
+      transform: translateY(-5px) scale(1.05);
+      box-shadow: 0 0 20px rgba(255,255,255,0.4);
     }
 
-    @keyframes snowFall {
-      0% { transform: translateY(0) scale(0.5); opacity: 0.8; }
-      100% { transform: translateY(110vh) scale(1); opacity: 0; }
-    }
-
+    /* Chibi Albedo */
     .albedo {
-      position: absolute;
+      position: fixed;
       bottom: 20px;
       right: 20px;
-      width: 100px;
-      height: auto;
+      width: 70px;
+      transition: transform 0.3s ease, filter 0.3s ease;
       z-index: 3;
+      cursor: pointer;
+      animation: float 3s ease-in-out infinite;
+    }
+    .albedo:hover {
+      transform: scale(1.1);
+      filter: drop-shadow(0 0 20px #fff);
+    }
+    @keyframes float {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(-10px); }
+    }
+
+    /* Sparkles */
+    .sparkle {
+      position: absolute;
+      width: 6px; height: 6px;
+      border-radius: 50%;
+      background: white;
+      pointer-events: none;
+      animation: sparkleAnim 1s ease-out forwards;
+    }
+    @keyframes sparkleAnim {
+      from { opacity: 1; transform: scale(1); }
+      to { opacity: 0; transform: scale(3); }
+    }
+
+    /* Shooting stars */
+    .shooting-star {
+      position: fixed;
+      width: 2px; height: 80px;
+      background: linear-gradient(white, transparent);
+      opacity: 0.8;
+      transform: rotate(45deg);
+      animation: shoot 1s linear forwards;
+    }
+    @keyframes shoot {
+      from { transform: translate(0,0) rotate(45deg); opacity: 1; }
+      to { transform: translate(-500px,500px) rotate(45deg); opacity: 0; }
     }
   </style>
 </head>
 <body>
-  <header>
-    <a href="https://t.me/kokamodz" target="_blank">
-      <img src="https://beeimg.com/images/l50897260274.png" alt="KOKAMODS Logo">
-    </a>
-  </header>
+  <canvas id="particles"></canvas>
 
-  <main>
-    <div class="buttons">
-      <a class="btn youtube" href="#" download>
-        <img src="https://img.icons8.com/ios-filled/50/ffffff/download--v1.png" alt="Download Icon"> YouTube
-      </a>
-      <a class="btn music" href="#" download>
-        <img src="https://img.icons8.com/ios-filled/50/ffffff/download--v1.png" alt="Download Icon"> Music
-      </a>
-    </div>
-  </main>
+  <!-- Logo -->
+  <img src="https://beeimg.com/images/l50897260274.png" class="logo"
+       onclick="window.open('https://t.me/kokamodz', '_blank')" />
 
-  <img class="albedo" src="https://beeimg.com/images/z93284656431.png" alt="Chibi Albedo">
+  <!-- Buttons -->
+  <div class="btn-container">
+    <a class="btn youtube" target="_blank">YouTube</a>
+    <a class="btn music" target="_blank">Music</a>
+  </div>
+
+  <!-- Chibi Albedo -->
+  <img src="https://beeimg.com/images/z93284656431.png" class="albedo" id="albedo" />
 
   <script>
-    // Snow particles
-    function createSnow() {
-      const snow = document.createElement('div');
-      snow.classList.add('snow');
-      snow.style.left = Math.random() * 100 + 'vw';
-      snow.style.animationDuration = (5 + Math.random() * 5) + 's';
-      snow.style.opacity = Math.random() * 0.8 + 0.2;
-      document.body.appendChild(snow);
-      setTimeout(() => { snow.remove(); }, 10000);
+    /* ===== Particle System ===== */
+    const canvas = document.getElementById("particles");
+    const ctx = canvas.getContext("2d");
+    let particles = [];
+
+    function resizeCanvas() {
+      canvas.width = window.innerWidth;
+      canvas.height = window.innerHeight;
     }
-    setInterval(createSnow, 200);
+    window.addEventListener("resize", resizeCanvas);
+    resizeCanvas();
 
-    // Load APK links from links.txt
-// Load YouTube link
-fetch('assets/apk/yt.txt')
-  .then(res => res.text())
-  .then(link => {
-    document.querySelector('.btn.youtube').href = link.trim();
-  });
+    function createParticle() {
+      return {
+        x: Math.random() * canvas.width,
+        y: Math.random() * canvas.height,
+        size: Math.random() * 3 + 1,
+        speedY: Math.random() * 1 + 0.5,
+        type: Math.random() < 0.5 ? "snow" : (Math.random() < 0.5 ? "twinkle" : "orb"),
+        opacity: Math.random()
+      };
+    }
 
-// Load Music link
-fetch('assets/apk/ytm.txt')
-  .then(res => res.text())
-  .then(link => {
-    document.querySelector('.btn.music').href = link.trim();
-  });
- </script>
+    for (let i = 0; i < 200; i++) particles.push(createParticle());
+
+    function drawParticles() {
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      particles.forEach(p => {
+        ctx.beginPath();
+        if (p.type === "snow") {
+          ctx.fillStyle = `rgba(255,255,255,${p.opacity})`;
+          ctx.arc(p.x, p.y, p.size, 0, Math.PI * 2);
+        } else if (p.type === "twinkle") {
+          ctx.fillStyle = `rgba(200,200,255,${Math.random()})`;
+          ctx.rect(p.x, p.y, p.size, p.size);
+        } else {
+          ctx.fillStyle = `rgba(255,150,255,${p.opacity * 0.5})`;
+          ctx.arc(p.x, p.y, p.size * 2, 0, Math.PI * 2);
+        }
+        ctx.fill();
+
+        p.y += p.speedY;
+        if (p.y > canvas.height) {
+          p.x = Math.random() * canvas.width;
+          p.y = -p.size;
+        }
+      });
+      requestAnimationFrame(drawParticles);
+    }
+    drawParticles();
+
+    /* ===== Parallax Logo & Albedo ===== */
+    document.addEventListener("mousemove", e => {
+      const moveX = (e.clientX / window.innerWidth - 0.5) * 20;
+      const moveY = (e.clientY / window.innerHeight - 0.5) * 20;
+      document.querySelector(".logo").style.transform = `translate(${moveX}px, ${moveY}px) scale(1.02)`;
+      document.querySelector(".albedo").style.transform = `translate(${moveX/2}px, ${moveY/2}px)`;
+    });
+
+    /* ===== Sparkles on Albedo Click ===== */
+    const albedo = document.getElementById("albedo");
+    albedo.addEventListener("click", e => {
+      for (let i = 0; i < 15; i++) {
+        const sparkle = document.createElement("div");
+        sparkle.className = "sparkle";
+        sparkle.style.left = `${e.clientX}px`;
+        sparkle.style.top = `${e.clientY}px`;
+        document.body.appendChild(sparkle);
+        setTimeout(() => sparkle.remove(), 1000);
+      }
+    });
+
+    /* ===== Shooting stars ===== */
+    function createShootingStar() {
+      const star = document.createElement("div");
+      star.className = "shooting-star";
+      star.style.top = `${Math.random() * window.innerHeight / 2}px`;
+      star.style.left = `${window.innerWidth}px`;
+      document.body.appendChild(star);
+      setTimeout(() => star.remove(), 1000);
+    }
+    setInterval(createShootingStar, 5000);
+
+    /* ===== Load Links from yt.txt and ytm.txt ===== */
+    fetch("assets/apk/yt.txt")
+      .then(res => res.text())
+      .then(link => { document.querySelector(".btn.youtube").href = link.trim(); });
+
+    fetch("assets/apk/ytm.txt")
+      .then(res => res.text())
+      .then(link => { document.querySelector(".btn.music").href = link.trim(); });
+  </script>
 </body>
 </html>
 
